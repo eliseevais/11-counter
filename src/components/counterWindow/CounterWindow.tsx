@@ -1,12 +1,9 @@
 import React, {useEffect, useState} from "react";
+import {Styles} from "../startWindow/Start.window_Styled";
 
 export const CounterWindow = () => {
 
   const [value, setValue] = useState(0);
-
-  useEffect(() => {
-    localStorage.setItem('myValue', JSON.stringify(value))
-  }, [value]);
 
   useEffect(() => {
     const valueAsString = localStorage.getItem('myValue')
@@ -16,20 +13,30 @@ export const CounterWindow = () => {
     }
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem('myValue', JSON.stringify(value))
+  }, [value]);
+
   const incHandler = () => {
     setValue(value + 1)
   };
 
   const resetHandler = () => {
-    localStorage.clear()
+    localStorage.clear();
+    setValue(0);
   }
 
   return (
-    <>
-    <div>Counter window</div>
-      {value}
-      <button onClick={incHandler}>inc</button>
-      <button onClick={resetHandler}>reset</button>
-    </>
+    <Styles.Wrapper>
+      <Styles.WrapperForValues>
+        {value}
+      </Styles.WrapperForValues>
+
+      <Styles.WrapperForButton>
+        <button onClick={incHandler}>inc</button>
+        <button onClick={resetHandler}>reset</button>
+      </Styles.WrapperForButton>
+
+    </Styles.Wrapper>
   )
 }
