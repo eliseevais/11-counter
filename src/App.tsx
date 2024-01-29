@@ -1,60 +1,75 @@
-import React, {useEffect, useState} from "react";
+import React, {ChangeEvent, useEffect, useState} from "react";
 import styled from "styled-components";
 import {MyTheme} from "./styles/MyTheme";
 import {Styles} from "./styles/Windows_Styled";
 
 const App = () => {
-
-  const [maxValue, setMaxValue] = useState(0);
-  const onChangeMaxValueHandler = (e: any) => {
-    setMaxValue(+e.currentTarget.value);
-  };
-
-  const [startValue, setStartValue] = useState(0);
-  useEffect(() => {
-    const valueAsString = localStorage.getItem('startValue')
+  const [value, setValue] = useState(0);
+  const [error, setError] = useState<string>('');
+  const [touched, setTouched] = useState<boolean>(true);
+  const [maxValue, setMaxValue] = useState(() => {
+    const valueAsString = localStorage.getItem('maxValue');
     if (valueAsString) {
-      const valueAsNumber = JSON.parse(valueAsString);
-      setStartValue(valueAsNumber)
+      return JSON.parse(valueAsString);
     }
-  }, []);
-  const onChangeHandler = (e: any) => {
-    setStartValue(+e.currentTarget.value)
+    return 5
+  });
+  const [startValue, setStartValue] = useState(() => {
+    const valueAsString = localStorage.getItem('startValue');
+    if (valueAsString) {
+      return JSON.parse(valueAsString);
+    }
+    return 0
+  });
+
+  const onChangeStartValueHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = +e.currentTarget.value;
+    if (value <= maxValue) {
+      setStartValue(value);
+      setError('');
+      setTouched(true)
+    } else {
+      setError('Incorrect value');
+      setTouched(false)
+    }
   };
-  const setStartValueHandler = () => {
-    localStorage.setItem('startValue', JSON.stringify(startValue));
-    if (+startValue <= +maxValue ) {
-      setValue(startValue);
-    }
-    if (+startValue > +maxValue ) {
+
+  const onChangeMaxValueHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = +e.currentTarget.value
+    if (value >= startValue) {
+      setMaxValue(value);
+      setError('');
+      setTouched(true);
+    } else {
       setError('Incorrect value');
     }
   };
 
-  const [value, setValue] = useState(0);
-  useEffect(() => {
-    const valueAsString = localStorage.getItem('myValue')
-    if (valueAsString) {
-      const valueAsNumber = JSON.parse(valueAsString);
-      setValue(valueAsNumber)
+  const onSetClickHandler = () => {
+    localStorage.setItem('startValue', JSON.stringify(startValue));
+    localStorage.setItem('maxValue', JSON.stringify(maxValue));
+    if (startValue > 0) {
+      setValue(startValue);
     }
-  }, []);
+    if (startValue < 0) {
+      setError('Value should be 0 or greater');
+    }
+  };
 
-  useEffect(() => {
-    localStorage.setItem('myValue', JSON.stringify(value))
-  }, [value]);
 
   const incHandler = () => {
-    setValue(value + 1)
+    const newValue = value + 1
+    if (newValue <= maxValue && newValue > 0) {
+      setValue(value + 1)
+    } else {
+      setError('Incorrect value');
+      setTouched(false)
+    }
   };
 
   const resetHandler = () => {
-    localStorage.clear();
     setValue(0);
-    setError(null);
   };
-
-  const [error, setError] = useState<string | null>(null);
 
   return (
     <AppWrapper>
@@ -63,36 +78,44 @@ const App = () => {
           <Styles.WrapperForValues>
             <Styles.WrapperForGroup>
               <div>max value:</div>
-              <input value={maxValue} type={"number"}
-                     onChange={onChangeMaxValueHandler}
+              <input
+                value={maxValue}
+                type={"number"}
+                onChange={onChangeMaxValueHandler}
               />
             </Styles.WrapperForGroup>
 
             <Styles.WrapperForGroup>
               <div>start value:</div>
-              <input value={startValue} type={"number"}
-                     onChange={onChangeHandler}
+              <input value={startValue}
+                     type={"number"}
+                     onChange={onChangeStartValueHandler}
               />
             </Styles.WrapperForGroup>
           </Styles.WrapperForValues>
 
           <Styles.WrapperForButton>
-            <button onClick={setStartValueHandler}>set</button>
+            <button onClick={onSetClickHandler}
+                    disabled={startValue == maxValue}
+            >set</button>
           </Styles.WrapperForButton>
         </Styles.Wrapper>
-        )
       </div>
       <div>
         <Styles.Wrapper>
 
           <Styles.WrapperForValues>
-            {value}
-            {error}
+              {error ? error : value}
           </Styles.WrapperForValues>
 
           <Styles.WrapperForButton>
-            <button onClick={incHandler}>inc</button>
-            <button onClick={resetHandler}>reset</button>
+            <button onClick={incHandler}
+                    disabled={value >= maxValue || !!error || touched === false || startValue == maxValue}
+            >inc
+            </button>
+            <button onClick={resetHandler}
+                    disabled={!!error || value === startValue || touched === false || startValue == maxValue}>reset
+            </button>
           </Styles.WrapperForButton>
         </Styles.Wrapper>
       </div>

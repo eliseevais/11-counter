@@ -71,10 +71,19 @@ const WrapperForGroup = styled.div`
   display: flex;
   flex-direction: row;
 `
+const ErrorWrapper = styled.div`
+  background-color: red;
+`
+
+const Normal = styled.div`
+  background-color: yellow;
+`
 
 export const Styles = {
   Wrapper,
   WrapperForValues,
   WrapperForButton,
-  WrapperForGroup
+  WrapperForGroup,
+  ErrorWrapper,
+  Normal
 }
