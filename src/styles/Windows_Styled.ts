@@ -44,7 +44,7 @@ const Wrapper = styled.div`
   }
 `
 
-const WrapperForValues = styled.div`
+const WrapperForValues = styled.div<{error?: string}>`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -54,6 +54,9 @@ const WrapperForValues = styled.div`
   min-height: 160px;
   border-radius: 10px;
   border: 2px solid ${MyTheme.colors.accent};
+
+  color:  ${props => props.error ? 'red': ''};
+  border: 2px solid ${props => props.error ? 'red': ''};
 `
 
 const WrapperForButton = styled.div`
@@ -64,26 +67,25 @@ const WrapperForButton = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  align-items: center;
+  align-items: center
 `
 
-const WrapperForGroup = styled.div`
+const WrapperForGroup = styled.div<{error?: string}>`
   display: flex;
   flex-direction: row;
-`
-const ErrorWrapper = styled.div`
-  background-color: red;
-`
-
-const Normal = styled.div`
-  background-color: yellow;
+  
+  & input {
+    color:  ${props => props.error ? 'red': ''};
+    border: 2px solid ${props => props.error ? 'red': ''};
+    &:focus {
+      border: 1px solid ${props => props.error ? 'red': ''};
+    }
+  }
 `
 
 export const Styles = {
   Wrapper,
   WrapperForValues,
   WrapperForButton,
-  WrapperForGroup,
-  ErrorWrapper,
-  Normal
+  WrapperForGroup
 }

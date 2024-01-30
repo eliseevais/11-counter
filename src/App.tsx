@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useState} from "react";
+import React, {ChangeEvent, useState} from "react";
 import styled from "styled-components";
 import {MyTheme} from "./styles/MyTheme";
 import {Styles} from "./styles/Windows_Styled";
@@ -48,7 +48,7 @@ const App = () => {
   const onSetClickHandler = () => {
     localStorage.setItem('startValue', JSON.stringify(startValue));
     localStorage.setItem('maxValue', JSON.stringify(maxValue));
-    if (startValue > 0) {
+    if (startValue >= 0) {
       setValue(startValue);
     }
     if (startValue < 0) {
@@ -76,7 +76,7 @@ const App = () => {
       <div>
         <Styles.Wrapper>
           <Styles.WrapperForValues>
-            <Styles.WrapperForGroup>
+            <Styles.WrapperForGroup error={error}>
               <div>max value:</div>
               <input
                 value={maxValue}
@@ -85,7 +85,7 @@ const App = () => {
               />
             </Styles.WrapperForGroup>
 
-            <Styles.WrapperForGroup>
+            <Styles.WrapperForGroup error={error}>
               <div>start value:</div>
               <input value={startValue}
                      type={"number"}
@@ -97,24 +97,30 @@ const App = () => {
           <Styles.WrapperForButton>
             <button onClick={onSetClickHandler}
                     disabled={startValue == maxValue}
-            >set</button>
+            >set
+            </button>
           </Styles.WrapperForButton>
         </Styles.Wrapper>
       </div>
       <div>
         <Styles.Wrapper>
 
-          <Styles.WrapperForValues>
-              {error ? error : value}
+          <Styles.WrapperForValues error={error}>
+            {error ? error : value}
           </Styles.WrapperForValues>
 
           <Styles.WrapperForButton>
             <button onClick={incHandler}
-                    disabled={value >= maxValue || !!error || touched === false || startValue == maxValue}
-            >inc
+                    disabled={value >= maxValue || !!error || touched === false
+                      || startValue == maxValue}
+            >
+              inc
             </button>
             <button onClick={resetHandler}
-                    disabled={!!error || value === startValue || touched === false || startValue == maxValue}>reset
+                    disabled={!!error || value === startValue
+                      || touched === false || startValue == maxValue}
+            >
+              reset
             </button>
           </Styles.WrapperForButton>
         </Styles.Wrapper>
