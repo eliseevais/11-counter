@@ -7,20 +7,25 @@ const App = () => {
   const [value, setValue] = useState(0);
   const [error, setError] = useState<string>('');
   const [touched, setTouched] = useState<boolean>(true);
-  const [maxValue, setMaxValue] = useState(() => {
-    const valueAsString = localStorage.getItem('maxValue');
-    if (valueAsString) {
-      return JSON.parse(valueAsString);
-    }
-    return 5
-  });
-  const [startValue, setStartValue] = useState(() => {
-    const valueAsString = localStorage.getItem('startValue');
-    if (valueAsString) {
-      return JSON.parse(valueAsString);
-    }
-    return 0
-  });
+
+  // const [maxValue, setMaxValue] = useState(() => {
+  //   const valueAsString = localStorage.getItem('maxValue');
+  //   if (valueAsString) {
+  //     return JSON.parse(valueAsString);
+  //   }
+  //   return 5
+  // });
+  const [maxValue, setMaxValue] = useState(0);
+
+  // const [startValue, setStartValue] = useState(() => {
+  //   const valueAsString = localStorage.getItem('startValue');
+  //   if (valueAsString) {
+  //     return JSON.parse(valueAsString);
+  //   }
+  //   return 0
+  // });
+
+  const [startValue, setStartValue] = useState(0);
 
   const onChangeStartValueHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const value = +e.currentTarget.value;
